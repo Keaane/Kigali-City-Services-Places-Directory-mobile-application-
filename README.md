@@ -2,17 +2,17 @@
 
 A modern Flutter application that helps residents and visitors of Kigali, Rwanda discover and share local services. Find hospitals, police stations, restaurants, cafes, parks, libraries, and tourist attractions with an intuitive map interface and community-driven listings.
 
-## ✨ Features
+##  Features
 
-- **🔐 Secure Authentication**: Firebase-powered user authentication with email verification
-- **📍 Interactive Map**: OpenStreetMap-powered map view with location markers
-- **📋 Service Directory**: Browse categorized local services and businesses
-- **👤 Personal Listings**: Create and manage your own service listings
-- **🎨 Modern UI**: Clean, accessible design with dark/light theme support
-- **📱 Cross-Platform**: Built with Flutter for iOS, Android, Web, and Desktop
-- **⚡ Real-time Updates**: Live data synchronization with Firebase Firestore
+- ** Secure Authentication**: Firebase-powered user authentication with email verification
+- ** Interactive Map**: OpenStreetMap-powered map view with location markers
+- ** Service Directory**: Browse categorized local services and businesses
+- ** Personal Listings**: Create and manage your own service listings
+- ** Modern UI**: Clean, accessible design with dark/light theme support
+- ** Cross-Platform**: Built with Flutter for iOS, Android, Web, and Desktop
+- ** Real-time Updates**: Live data synchronization with Firebase Firestore
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -58,7 +58,7 @@ flutter build ios --release
 flutter build web --release
 ```
 
-## 📱 Usage
+##  Usage
 
 ### For Users
 1. **Sign Up**: Create an account with email verification
@@ -73,7 +73,7 @@ flutter build web --release
 - **Navigation**: Custom page transitions with fade effects
 - **Error Handling**: User-friendly error messages and loading states
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Framework**: Flutter
 - **Language**: Dart
@@ -83,7 +83,7 @@ flutter build web --release
 - **UI**: Material Design 3 with Google Fonts
 - **Location**: Geolocator for GPS services
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 lib/
@@ -115,27 +115,7 @@ lib/
     └── app_theme.dart        # Colors and typography
 ```
 
-## 🎨 Design System
 
-### Colors
-- **Primary**: Blue (#2563EB) - Trust and reliability
-- **Secondary**: Dark Slate (#1E293B) - Professional
-- **Accent**: Light Blue (#3B82F6) - Interactive elements
-- **Background**: White - Clean and accessible
-
-### Typography
-- **Primary Font**: Inter (UI elements)
-- **Secondary Font**: Poppins (Headings)
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ### Development Guidelines
 - Follow Flutter best practices
