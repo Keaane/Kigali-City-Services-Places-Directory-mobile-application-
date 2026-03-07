@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 
@@ -18,85 +19,203 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = authProvider.user;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        backgroundColor: const Color(0xFF004D4D),
+        elevation: 0,
+        title: Text(
+          'Settings',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.blue,
-                      child: Icon(Icons.person, size: 30, color: Colors.white),
+            // Profile Card
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF004D4D), Color(0xFF00796B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: const Color(0xFFFFB300), width: 2),
                     ),
-                    const SizedBox(width: 16),
-                    Column(
+                    child: const Icon(Icons.person,
+                        size: 32, color: Colors.white),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           user?.displayName ?? 'User',
-                          style: const TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
                         ),
                         Text(
                           user?.email ?? '',
-                          style: const TextStyle(color: Colors.grey),
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: Colors.white70,
+                          ),
                         ),
-                        Text(
-                          user?.emailVerified == true
-                              ? '✅ Email Verified'
-                              : '❌ Email Not Verified',
-                          style: TextStyle(
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
                             color: user?.emailVerified == true
-                                ? Colors.green
-                                : Colors.red,
-                            fontSize: 12,
+                                ? Colors.green.withValues(alpha: 0.2)
+                                : Colors.red.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            user?.emailVerified == true
+                                ? '✅ Email Verified'
+                                : '❌ Not Verified',
+                            style: GoogleFonts.inter(
+                              fontSize: 11,
+                              color: user?.emailVerified == true
+                                  ? Colors.greenAccent
+                                  : Colors.redAccent,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            Card(
+            const SizedBox(height: 24),
+            Text(
+              'Preferences',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1A1A2E),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: SwitchListTile(
-                title: const Text('Location Notifications'),
-                subtitle: const Text(
-                    'Get notified about nearby services and places'),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                title: Text(
+                  'Location Notifications',
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+                subtitle: Text(
+                  'Get notified about nearby services',
+                  style: GoogleFonts.inter(
+                      fontSize: 12, color: Colors.grey),
+                ),
                 value: _notificationsEnabled,
                 onChanged: (val) =>
                     setState(() => _notificationsEnabled = val),
-                activeThumbColor: Colors.blue,
-                secondary: const Icon(Icons.notifications),
+                activeThumbColor: const Color(0xFF004D4D),
+                secondary: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF004D4D).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.notifications_outlined,
+                      color: Color(0xFF004D4D), size: 20),
+                ),
               ),
             ),
-            const SizedBox(height: 16),
-            Card(
+            const SizedBox(height: 24),
+            Text(
+              'Account',
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1A1A2E),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.red),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.logout,
+                      color: Colors.red, size: 20),
                 ),
+                title: Text(
+                  'Logout',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
+                ),
+                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: const Text('Logout'),
-                      content:
-                          const Text('Are you sure you want to logout?'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      title: Text('Logout',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600)),
+                      content: Text(
+                          'Are you sure you want to logout?',
+                          style: GoogleFonts.inter()),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),

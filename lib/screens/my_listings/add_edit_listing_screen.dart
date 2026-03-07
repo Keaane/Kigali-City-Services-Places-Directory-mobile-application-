@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../models/listing_model.dart';
 import '../../providers/auth_provider.dart';
@@ -66,13 +67,15 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
         _latitudeController.text.isEmpty ||
         _longitudeController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
+        const SnackBar(
+          content: Text('Please fill in all required fields'),
+          backgroundColor: Colors.redAccent,
+        ),
       );
       return;
     }
 
-    final listingProvider =
-        Provider.of<ListingProvider>(context, listen: false);
+    final listingProvider = Provider.of<ListingProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     bool success;
@@ -105,11 +108,19 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
     }
 
     if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isEditing ? 'Listing updated!' : 'Listing added!'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pop(context);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(listingProvider.errorMessage ?? 'An error occurred')),
+          content: Text(listingProvider.errorMessage ?? 'An error occurred'),
+          backgroundColor: Colors.redAccent,
+        ),
       );
     }
   }
@@ -118,25 +129,71 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Listing'),
-        content: const Text('Are you sure you want to delete this listing?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text('Delete Listing',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        content: Text('Are you sure you want to delete this listing?',
+            style: GoogleFonts.inter()),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Delete', style: TextStyle(color: Colors.red))),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
         ],
       ),
     );
 
     if (confirm == true && mounted) {
-      final listingProvider =
-          Provider.of<ListingProvider>(context, listen: false);
+      final listingProvider = Provider.of<ListingProvider>(context, listen: false);
       await listingProvider.deleteListing(widget.listing!.id);
       if (mounted) Navigator.pop(context);
     }
+  }
+
+  Widget _buildField(String label, TextEditingController controller,
+      {TextInputType? keyboardType, int maxLines = 1, String? hint}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          maxLines: maxLines,
+          style: GoogleFonts.inter(fontSize: 14),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: Colors.grey.shade400),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFF004D4D)),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
   }
 
   @override
@@ -144,111 +201,128 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
     final listingProvider = Provider.of<ListingProvider>(context);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Listing' : 'Add Listing'),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF004D4D),
         foregroundColor: Colors.white,
+        title: Text(
+          _isEditing ? 'Edit Listing' : 'Add Listing',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         actions: [
           if (_isEditing)
             IconButton(
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.delete_outline),
               onPressed: _delete,
             ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Place/Service Name *',
-                border: OutlineInputBorder(),
-              ),
+            _buildField('Place / Service Name *', _nameController,
+                hint: 'e.g. King Faisal Hospital'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Category',
+                    style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade700)),
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedCategory,
+                      isExpanded: true,
+                      style: GoogleFonts.inter(
+                          fontSize: 14, color: Colors.black87),
+                      items: categories
+                          .map((c) =>
+                              DropdownMenuItem(value: c, child: Text(c)))
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedCategory = val!),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: _selectedCategory,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-              items: categories
-                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                  .toList(),
-              onChanged: (val) => setState(() => _selectedCategory = val!),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _addressController,
-              decoration: const InputDecoration(
-                labelText: 'Address *',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _contactController,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: 'Contact Number',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _descriptionController,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
+            _buildField('Address *', _addressController,
+                hint: 'e.g. KG 7 Ave, Kigali'),
+            _buildField('Contact Number', _contactController,
+                keyboardType: TextInputType.phone,
+                hint: 'e.g. +250 788 000 000'),
+            _buildField('Description', _descriptionController,
+                maxLines: 3, hint: 'Brief description of this place...'),
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _latitudeController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Latitude *',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                  child: _buildField('Latitude *', _latitudeController,
+                      keyboardType: TextInputType.number,
+                      hint: 'e.g. -1.9441'),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: TextField(
-                    controller: _longitudeController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Longitude *',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                  child: _buildField('Longitude *', _longitudeController,
+                      keyboardType: TextInputType.number,
+                      hint: 'e.g. 30.0619'),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Tip: Find coordinates on Google Maps by long-pressing a location.',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF004D4D).withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                    color: const Color(0xFF004D4D).withValues(alpha: 0.2)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline,
+                      color: Color(0xFF004D4D), size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Find coordinates by long-pressing a location on Google Maps.',
+                      style: GoogleFonts.inter(
+                          fontSize: 12, color: const Color(0xFF004D4D)),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             listingProvider.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                    child: CircularProgressIndicator(
+                        color: Color(0xFF004D4D)))
                 : ElevatedButton(
                     onPressed: _save,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFB300),
+                      foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: Text(_isEditing ? 'Update Listing' : 'Add Listing',
-                        style: const TextStyle(fontSize: 16)),
+                    child: Text(
+                      _isEditing ? 'Update Listing' : 'Add Listing',
+                      style: GoogleFonts.poppins(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
                   ),
           ],
         ),

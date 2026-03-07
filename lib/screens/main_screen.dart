@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/listing_provider.dart';
@@ -40,31 +41,56 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Directory',
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _screens[_currentIndex],
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF1A1A2E),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: const Color(0xFF1A1A2E),
+          selectedItemColor: const Color(0xFFFFB300),
+          unselectedItemColor: Colors.white38,
+          selectedLabelStyle: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.my_library_books),
-            label: 'My Listings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Map View',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
+          unselectedLabelStyle: GoogleFonts.inter(fontSize: 11),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore_outlined),
+              activeIcon: Icon(Icons.explore),
+              label: 'Directory',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bookmark_outline),
+              activeIcon: Icon(Icons.bookmark),
+              label: 'My Listings',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.map_outlined),
+              activeIcon: Icon(Icons.map),
+              label: 'Map View',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings_outlined),
+              activeIcon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+        ),
       ),
     );
   }
