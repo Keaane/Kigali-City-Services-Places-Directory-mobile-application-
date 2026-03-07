@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'providers/listing_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/main_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,10 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Kigali Services',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
+        theme: AppTheme.theme,
         home: const AuthWrapper(),
       ),
     );
@@ -44,6 +42,14 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+
+    if (authProvider.isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+      );
+    }
 
     if (authProvider.isAuthenticated) {
       return const MainScreen();

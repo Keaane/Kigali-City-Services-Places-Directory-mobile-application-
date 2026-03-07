@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'signup_screen.dart';
@@ -22,16 +23,31 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  String _friendlyError(String error) {
+    if (error.contains('user-not-found') || error.contains('wrong-password') || error.contains('invalid-credential')) {
+      return 'Invalid email or password. Please try again.';
+    } else if (error.contains('invalid-email')) {
+      return 'Please enter a valid email address.';
+    } else if (error.contains('too-many-requests')) {
+      return 'Too many attempts. Please try again later.';
+    } else if (error.contains('verify your email')) {
+      return 'Please verify your email before logging in.';
+    }
+    return 'Something went wrong. Please try again.';
+  }
+
   Future<void> _login() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     bool success = await authProvider.signIn(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
-
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authProvider.errorMessage ?? 'Login failed')),
+        SnackBar(
+          content: Text(_friendlyError(authProvider.errorMessage ?? '')),
+          backgroundColor: Colors.redAccent,
+        ),
       );
     }
   }
@@ -41,74 +57,161 @@ class _LoginScreenState extends State<LoginScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.location_city, size: 80, color: Colors.blue),
-              const SizedBox(height: 16),
-              const Text(
-                'Kigali Services',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Find services & places in Kigali',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 40),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: const Icon(Icons.lock),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword
-                        ? Icons.visibility
-                        : Icons.visibility_off),
-                    onPressed: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF004D4D), Color(0xFF00796B), Color(0xFF1A1A2E)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 30),
+                Center(
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFFFFB300), width: 2),
+                    ),
+                    child: const Icon(Icons.location_city, size: 48, color: Color(0xFFFFB300)),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              authProvider.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      onPressed: _login,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Login', style: TextStyle(fontSize: 16)),
-                    ),
-              const SizedBox(height: 16),
-              TextButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SignupScreen()),
+                const SizedBox(height: 20),
+                Text(
+                  'Kigali Services',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                child: const Text("Don't have an account? Sign up"),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  'Find services & places in Kigali',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 48),
+                Text(
+                  'Email',
+                  style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  style: GoogleFonts.inter(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'you@example.com',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    prefixIcon: const Icon(Icons.email_outlined, color: Colors.white54),
+                    filled: true,
+                    fillColor: Colors.white.withValues(alpha: 0.08),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFFFB300)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Password',
+                  style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  style: GoogleFonts.inter(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: '••••••••',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    prefixIcon: const Icon(Icons.lock_outline, color: Colors.white54),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        color: Colors.white54,
+                      ),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white.withValues(alpha: 0.08),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFFFB300)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                authProvider.isLoading
+                    ? const Center(child: CircularProgressIndicator(color: Color(0xFFFFB300)))
+                    : ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFFB300),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Login',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account? ",
+                      style: GoogleFonts.inter(color: Colors.white60),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const SignupScreen(),
+                          transitionsBuilder: (_, animation, __, child) =>
+                              FadeTransition(opacity: animation, child: child),
+                        ),
+                      ),
+                      child: Text(
+                        'Sign up',
+                        style: GoogleFonts.inter(
+                          color: const Color(0xFFFFB300),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
