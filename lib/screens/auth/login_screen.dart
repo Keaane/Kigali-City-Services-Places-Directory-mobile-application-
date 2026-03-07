@@ -55,6 +55,37 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _forgotPassword() async {
+    if (_emailController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email address first'),
+          backgroundColor: AppColors.warning,
+        ),
+      );
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    bool success = await authProvider.resetPassword(_emailController.text.trim());
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset email sent! Check your inbox.'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.errorMessage ?? 'Failed to send reset email'),
+          backgroundColor: AppColors.destructive,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -335,12 +366,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppColors.foreground,
                               ),
                             ),
-                            Text(
-                              'Forgot password?',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primary,
+                            GestureDetector(
+                              onTap: _forgotPassword,
+                              child: Text(
+                                'Forgot password?',
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ),
                               ),
                             ),
                           ],

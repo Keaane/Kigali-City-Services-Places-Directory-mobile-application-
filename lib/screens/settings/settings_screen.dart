@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../theme/app_theme.dart';
+import 'personal_info_screen.dart';
+import 'privacy_security_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -213,6 +215,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.chevron_right,
                               size: 16, color: AppColors.mutedForeground),
                           isLast: false,
+                          onTap: () => Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => const PersonalInfoScreen(),
+                              transitionsBuilder: (_, animation, __, child) =>
+                                  FadeTransition(opacity: animation, child: child),
+                            ),
+                          ),
                         ),
                         _settingItem(
                           icon: Icons.shield_outlined,
@@ -220,6 +230,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           trailing: const Icon(Icons.chevron_right,
                               size: 16, color: AppColors.mutedForeground),
                           isLast: true,
+                          onTap: () => Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => const PrivacySecurityScreen(),
+                              transitionsBuilder: (_, animation, __, child) =>
+                                  FadeTransition(opacity: animation, child: child),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -298,51 +316,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String? description,
     required Widget trailing,
     required bool isLast,
+    VoidCallback? onTap,
   }) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: AppColors.muted,
-                  borderRadius: BorderRadius.circular(8),
+        GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColors.muted,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(icon, size: 20, color: AppColors.foreground),
                 ),
-                child: Icon(icon, size: 20, color: AppColors.foreground),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.foreground,
-                      ),
-                    ),
-                    if (description != null) ...[
-                      const SizedBox(height: 2),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        description,
+                        label,
                         style: GoogleFonts.inter(
-                          fontSize: 13,
-                          color: AppColors.mutedForeground,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.foreground,
                         ),
                       ),
+                      if (description != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          description,
+                          style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: AppColors.mutedForeground,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              trailing,
-            ],
+                const SizedBox(width: 12),
+                trailing,
+              ],
+            ),
           ),
         ),
         // Divider between items but not after the last one

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../models/listing_model.dart';
 import '../../providers/listing_provider.dart';
 import '../../theme/app_theme.dart';
+import '../directory/listing_detail_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -279,32 +280,77 @@ class _MapScreenState extends State<MapScreen> {
                         _detailLine(Icons.info_outline,
                             _selectedListing!.description),
                       const SizedBox(height: 14),
-                      // Open navigation button
-                      GestureDetector(
-                        onTap: () => _launchNavigation(_selectedListing!),
-                        child: Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Open navigation',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                      // View details and navigation buttons
+                      Row(
+                        children: [
+                          // View details button
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) =>
+                                      ListingDetailScreen(listing: _selectedListing!),
+                                  transitionsBuilder: (_, animation, __, child) =>
+                                      FadeTransition(opacity: animation, child: child),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.navigation,
-                                  size: 16, color: Colors.white),
-                            ],
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: AppColors.accent,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'View details',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(Icons.arrow_forward,
+                                        size: 16, color: Colors.white),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12),
+                          // Open navigation button
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => _launchNavigation(_selectedListing!),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Navigate',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(Icons.navigation,
+                                        size: 16, color: Colors.white),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

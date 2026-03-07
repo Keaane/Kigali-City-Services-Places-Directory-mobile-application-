@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/listing_provider.dart';
+import '../theme/app_theme.dart';
 import 'directory/directory_screen.dart';
 import 'my_listings/my_listings_screen.dart';
 import 'map/map_screen.dart';

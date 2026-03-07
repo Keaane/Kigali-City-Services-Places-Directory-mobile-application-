@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/listing_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/listing_provider.dart';
+import '../../theme/app_theme.dart';
 
 class AddEditListingScreen extends StatefulWidget {
   final Listing? listing;

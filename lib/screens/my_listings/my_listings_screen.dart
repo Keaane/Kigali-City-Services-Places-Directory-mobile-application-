@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/listing_provider.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/listing_card.dart';
 import '../directory/listing_detail_screen.dart';
 import 'add_edit_listing_screen.dart';
 

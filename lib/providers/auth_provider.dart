@@ -58,4 +58,75 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signOut() async {
     await _authService.signOut();
   }
+
+  Future<bool> updateProfile({String? displayName, String? photoURL}) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    String? error = await _authService.updateProfile(
+      displayName: displayName,
+      photoURL: photoURL,
+    );
+
+    _isLoading = false;
+    if (error != null) {
+      _errorMessage = error;
+      notifyListeners();
+      return false;
+    }
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> updatePassword(String currentPassword, String newPassword) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    String? error = await _authService.updatePassword(currentPassword, newPassword);
+
+    _isLoading = false;
+    if (error != null) {
+      _errorMessage = error;
+      notifyListeners();
+      return false;
+    }
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> deleteAccount(String password) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    String? error = await _authService.deleteAccount(password);
+
+    _isLoading = false;
+    if (error != null) {
+      _errorMessage = error;
+      notifyListeners();
+      return false;
+    }
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> resetPassword(String email) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    String? error = await _authService.resetPassword(email);
+
+    _isLoading = false;
+    if (error != null) {
+      _errorMessage = error;
+      notifyListeners();
+      return false;
+    }
+    notifyListeners();
+    return true;
+  }
 }
