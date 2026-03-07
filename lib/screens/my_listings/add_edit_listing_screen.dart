@@ -187,7 +187,7 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF004D4D)),
+              borderSide: BorderSide(color: AppColors.primary),
             ),
           ),
         ),
@@ -201,9 +201,9 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
     final listingProvider = Provider.of<ListingProvider>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004D4D),
+        backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
         title: Text(
           _isEditing ? 'Edit Listing' : 'Add Listing',
@@ -283,21 +283,21 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF004D4D).withValues(alpha: 0.05),
+                color: AppColors.primary.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: const Color(0xFF004D4D).withValues(alpha: 0.2)),
+                    color: AppColors.primary.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline,
-                      color: Color(0xFF004D4D), size: 16),
+                  Icon(Icons.info_outline,
+                      color: AppColors.primary, size: 16),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Find coordinates by long-pressing a location on Google Maps.',
                       style: GoogleFonts.inter(
-                          fontSize: 12, color: const Color(0xFF004D4D)),
+                          fontSize: 12, color: AppColors.primary),
                     ),
                   ),
                 ],
@@ -307,12 +307,12 @@ class _AddEditListingScreenState extends State<AddEditListingScreen> {
             listingProvider.isLoading
                 ? const Center(
                     child: CircularProgressIndicator(
-                        color: Color(0xFF004D4D)))
+                        color: AppColors.primary))
                 : ElevatedButton(
                     onPressed: _save,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFB300),
-                      foregroundColor: Colors.black,
+                      backgroundColor: AppColors.accent,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

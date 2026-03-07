@@ -12,19 +12,19 @@ class ListingCard extends StatelessWidget {
   Color _categoryColor(String category) {
     switch (category) {
       case 'Hospital':
-        return Colors.red;
+        return const Color(0xFFEF4444); // Red
       case 'Police Station':
-        return Colors.blue;
+        return const Color(0xFF3B82F6); // Blue
       case 'Library':
-        return Colors.purple;
+        return const Color(0xFF8B5CF6); // Purple
       case 'Restaurant':
-        return Colors.orange;
+        return const Color(0xFFF59E0B); // Amber
       case 'Café':
-        return Colors.brown;
+        return const Color(0xFF6B7280); // Gray
       case 'Park':
-        return Colors.green;
+        return const Color(0xFF10B981); // Green
       case 'Tourist Attraction':
-        return Colors.teal;
+        return const Color(0xFF06B6D4); // Cyan
       default:
         return AppColors.primary;
     }

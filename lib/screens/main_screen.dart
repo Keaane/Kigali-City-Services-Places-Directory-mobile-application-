@@ -46,13 +46,13 @@ class _MainScreenState extends State<MainScreen> {
         child: _screens[_currentIndex],
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF1A1A2E),
+        decoration: BoxDecoration(
+          color: AppColors.secondary,
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
-              offset: Offset(0, -2),
+              offset: const Offset(0, -2),
             ),
           ],
         ),
@@ -60,9 +60,9 @@ class _MainScreenState extends State<MainScreen> {
           currentIndex: _currentIndex,
           onTap: (index) => setState(() => _currentIndex = index),
           type: BottomNavigationBarType.fixed,
-          backgroundColor: const Color(0xFF1A1A2E),
-          selectedItemColor: const Color(0xFFFFB300),
-          unselectedItemColor: Colors.white38,
+          backgroundColor: AppColors.secondary,
+          selectedItemColor: AppColors.accent,
+          unselectedItemColor: AppColors.mutedForeground,
           selectedLabelStyle: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: FontWeight.w600,
