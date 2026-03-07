@@ -388,8 +388,7 @@ class MyListingsScreen extends StatelessWidget {
   }
 }
 
-// Separate widget for My Listings cards — they have Edit/View/Delete action buttons
-// unlike the directory cards which just navigate to detail
+// My listing card widget with edit/view/delete actions
 class _MyListingCard extends StatelessWidget {
   final listing;
   final VoidCallback onView;

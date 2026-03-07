@@ -359,7 +359,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // Reusable detail row with an icon and text — used for address and description
+  // Detail line widget for address and description
   Widget _detailLine(IconData icon, String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

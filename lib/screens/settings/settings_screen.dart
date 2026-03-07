@@ -291,8 +291,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // Reusable setting row widget — keeps each row consistent without
-  // repeating the same padding and divider logic everywhere
+  // Setting item widget for consistent row styling
   Widget _settingItem({
     required IconData icon,
     required String label,

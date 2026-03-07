@@ -234,7 +234,7 @@ class ListingDetailScreen extends StatelessWidget {
     );
   }
 
-  // Reusable icon + text row used for address, contact, and description
+  // Detail line widget for address, contact, and description
   Widget _detailLine(IconData icon, String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
