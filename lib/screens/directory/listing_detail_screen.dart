@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../models/listing_model.dart';
+import '../../theme/app_theme.dart';
 
 class ListingDetailScreen extends StatelessWidget {
   final Listing listing;
@@ -18,138 +20,238 @@ class ListingDetailScreen extends StatelessWidget {
     }
   }
 
-  Color _categoryColor(String category) {
-    switch (category) {
-      case 'Hospital':
-        return Colors.red;
-      case 'Police Station':
-        return Colors.blue;
-      case 'Library':
-        return Colors.purple;
-      case 'Restaurant':
-        return Colors.orange;
-      case 'Café':
-        return Colors.brown;
-      case 'Park':
-        return Colors.green;
-      case 'Tourist Attraction':
-        return Colors.teal;
-      default:
-        return Colors.grey;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final position = LatLng(listing.latitude, listing.longitude);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(listing.name),
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 250,
-              child: FlutterMap(
-                options: MapOptions(
-                  initialCenter: position,
-                  initialZoom: 15,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.example.kigali_services',
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: position,
+      backgroundColor: AppColors.background,
+      body: CustomScrollView(
+        slivers: [
+          // Top bar with back button and title
+          SliverToBoxAdapter(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                child: Row(
+                  children: [
+                    // Back button
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
                         width: 40,
                         height: 40,
-                        child: Icon(
-                          Icons.location_pin,
-                          color: _categoryColor(listing.category),
-                          size: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.muted,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.arrow_back,
+                            size: 20, color: AppColors.foreground),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'Details',
+                          style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.foreground,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    // Placeholder to balance the row
+                    const SizedBox(width: 40),
+                  ],
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _categoryColor(listing.category),
-                      borderRadius: BorderRadius.circular(20),
+          ),
+
+          // Map section
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: SizedBox(
+                  height: 220,
+                  child: FlutterMap(
+                    options: MapOptions(
+                      initialCenter: position,
+                      initialZoom: 15,
                     ),
-                    child: Text(
-                      listing.category,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    listing.name,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
                     children: [
-                      const Icon(Icons.location_on, color: Colors.grey),
-                      const SizedBox(width: 8),
-                      Expanded(child: Text(listing.address)),
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'com.example.kigali_services',
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: position,
+                            width: 52,
+                            height: 52,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                  bottomLeft: Radius.circular(4),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        Colors.black.withValues(alpha: 0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(Icons.location_on,
+                                  color: Colors.white, size: 26),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.phone, color: Colors.grey),
-                      const SizedBox(width: 8),
-                      Text(listing.contactNumber),
+                ),
+              ),
+            ),
+          ),
+
+          // Detail sheet card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title + category pill + contact pill
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                listing.name,
+                                style: GoogleFonts.inter(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.foreground,
+                                  height: 1.2,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              // Category pill
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppColors.muted,
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Text(
+                                  listing.category,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.foreground,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    // Address line
+                    _detailLine(
+                        Icons.location_on_outlined, listing.address),
+                    const SizedBox(height: 10),
+                    // Contact line
+                    if (listing.contactNumber.isNotEmpty)
+                      _detailLine(
+                          Icons.phone_outlined, listing.contactNumber),
+                    // Description line
+                    if (listing.description.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      _detailLine(Icons.info_outline, listing.description),
                     ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Description',
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(listing.description),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _launchNavigation,
-                      icon: const Icon(Icons.directions),
-                      label: const Text('Get Directions'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.teal,
-                        foregroundColor: Colors.white,
+                    const SizedBox(height: 16),
+                    // Open navigation button
+                    GestureDetector(
+                      onTap: _launchNavigation,
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Open navigation',
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.navigation,
+                                size: 16, color: Colors.white),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        ],
       ),
+    );
+  }
+
+  // Reusable icon + text row used for address, contact, and description
+  Widget _detailLine(IconData icon, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: AppColors.mutedForeground),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              color: AppColors.mutedForeground,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

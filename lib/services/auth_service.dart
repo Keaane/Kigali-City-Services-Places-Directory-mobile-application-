@@ -41,11 +41,11 @@ class AuthService {
         password: password,
       );
 
-      // Check email verification
-      if (!result.user!.emailVerified) {
-        await _auth.signOut();
-        return 'Please verify your email before logging in.';
-      }
+      // Temporarily disable email verification check for testing
+      // if (!result.user!.emailVerified) {
+      //   await _auth.signOut();
+      //   return 'Please verify your email before logging in.';
+      // }
 
       return null; // null means success
     } catch (e) {

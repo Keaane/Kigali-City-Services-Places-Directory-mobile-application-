@@ -14,13 +14,13 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   AuthProvider() {
-  _isLoading = true;
-  _authService.authStateChanges.listen((user) {
-    _user = user;
-    _isLoading = false;
-    notifyListeners();
-  });
-}
+    _isLoading = true;
+    _authService.authStateChanges.listen((user) {
+      _user = user;
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
   Future<bool> signUp(String email, String password, String name) async {
     _isLoading = true;
     _errorMessage = null;
