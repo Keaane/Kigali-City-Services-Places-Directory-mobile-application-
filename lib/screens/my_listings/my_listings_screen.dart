@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/listing_provider.dart';
 import '../../widgets/listing_card.dart';
 import '../directory/listing_detail_screen.dart';
@@ -12,7 +11,6 @@ class MyListingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listingProvider = Provider.of<ListingProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: AppBar(

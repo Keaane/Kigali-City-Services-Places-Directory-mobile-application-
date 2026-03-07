@@ -1,38 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../models/listing_model.dart';
 
-class ListingDetailScreen extends StatefulWidget {
+class ListingDetailScreen extends StatelessWidget {
   final Listing listing;
 
   const ListingDetailScreen({super.key, required this.listing});
 
-  @override
-  State<ListingDetailScreen> createState() => _ListingDetailScreenState();
-}
-
-class _ListingDetailScreenState extends State<ListingDetailScreen> {
-  GoogleMapController? _mapController;
-
   Future<void> _launchNavigation() async {
     final url =
-        'https://www.google.com/maps/dir/?api=1&destination=${widget.listing.latitude},${widget.listing.longitude}';
+        'https://www.google.com/maps/dir/?api=1&destination=${listing.latitude},${listing.longitude}';
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }
   }
 
+  Color _categoryColor(String category) {
+    switch (category) {
+      case 'Hospital':
+        return Colors.red;
+      case 'Police Station':
+        return Colors.blue;
+      case 'Library':
+        return Colors.purple;
+      case 'Restaurant':
+        return Colors.orange;
+      case 'Café':
+        return Colors.brown;
+      case 'Park':
+        return Colors.green;
+      case 'Tourist Attraction':
+        return Colors.teal;
+      default:
+        return Colors.grey;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final listing = widget.listing;
     final position = LatLng(listing.latitude, listing.longitude);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(listing.name),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -41,19 +55,32 @@ class _ListingDetailScreenState extends State<ListingDetailScreen> {
           children: [
             SizedBox(
               height: 250,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: position,
-                  zoom: 15,
+              child: FlutterMap(
+                options: MapOptions(
+                  initialCenter: position,
+                  initialZoom: 15,
                 ),
-                markers: {
-                  Marker(
-                    markerId: MarkerId(listing.id),
-                    position: position,
-                    infoWindow: InfoWindow(title: listing.name),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.kigali_services',
                   ),
-                },
-                onMapCreated: (controller) => _mapController = controller,
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: position,
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.location_pin,
+                          color: _categoryColor(listing.category),
+                          size: 40,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -61,21 +88,17 @@ class _ListingDetailScreenState extends State<ListingDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          listing.category,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _categoryColor(listing.category),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      listing.category,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -102,7 +125,8 @@ class _ListingDetailScreenState extends State<ListingDetailScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Description',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(listing.description),
@@ -115,7 +139,7 @@ class _ListingDetailScreenState extends State<ListingDetailScreen> {
                       label: const Text('Get Directions'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Colors.teal,
                         foregroundColor: Colors.white,
                       ),
                     ),

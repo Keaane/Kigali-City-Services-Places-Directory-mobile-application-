@@ -78,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 value: _notificationsEnabled,
                 onChanged: (val) =>
                     setState(() => _notificationsEnabled = val),
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
                 secondary: const Icon(Icons.notifications),
               ),
             ),

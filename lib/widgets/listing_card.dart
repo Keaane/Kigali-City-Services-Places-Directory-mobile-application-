@@ -50,10 +50,11 @@ class ListingCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: _categoryColor(listing.category).withOpacity(0.1),
+                color: _categoryColor(listing.category).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: _categoryColor(listing.category).withOpacity(0.5)),
+                  color: _categoryColor(listing.category).withValues(alpha: 0.5),
+                ),
               ),
               child: Text(
                 listing.category,
